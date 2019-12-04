@@ -1,0 +1,16 @@
+version: '3'
+services:
+  mysql:
+    image: mysql:5.6
+    command: mysqld --character-set-server=utf8
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql:/var/lib/mysql
+      - ./mysql.conf.d:/etc/mysql/conf.d
+  redis:
+    image: redis:5.0.4  # doc: https://hub.docker.com/_/redis
+    ports:
+      - 6379:6379
