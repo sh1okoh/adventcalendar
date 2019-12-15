@@ -31,7 +31,7 @@ const TodoForm = ({addTodo}) => {
 
 const Todo = ({todo, remove}) => {
   return (
-    <li><a href="#" className="list-group-item">{todo.text}</a>
+    <li><a href="#" className="list-group-item">{todo.contents}</a>
     <span onClick={() => {remove(todo.id)}}>×</span>
     </li>
   );
@@ -40,11 +40,8 @@ const Todo = ({todo, remove}) => {
 const TodoList = ({todos, remove}) => {
   console.log("todolist", todos);
   const todoNode = todos.map((todo) => {
-    console.log("todo", todo);
-    console.log("todo_id", todo.id);
     return (<Todo todo={todo} key={todo.id} remove={remove}/>)
   });
-  console.log("todolist2", todos);
   return (<div className="list-group" style={{marginTop:'30px'}}>{todoNode}</div>);
 }
 
@@ -57,24 +54,21 @@ class TodoApp extends React.Component{
     this.state = {
       data: []
     }
-    this.apiUrl = 'http://localhost:3000/api/todo/'
+    this.apiUrl = 'http://localhost:3000/api/todos/'
   }
 
   componentDidMount(){
     console.log("componentDidMount");
     axios.get(this.apiUrl)
       .then((res) => {
-        console.log("res.data", res.data);
         this.setState({ data: res.data });
       });
   }
 
   addTodo(val){
-    console.log("addTodo");
-    const todo = {text: val}
+    const todo = {contents: val}
     axios.post(this.apiUrl, todo)
        .then((res) => {
-          console.log("@@@@@@", res.data);
           this.state.data.push(res.data);
           this.setState({data: this.state.data});
        });
@@ -89,6 +83,9 @@ class TodoApp extends React.Component{
       .then((res) => {
         this.setState({data: remainder});
       })
+  }
+  handleUpdate(id) {
+    const reminder = ""
   }
 
   // handleUpdate(id) {
