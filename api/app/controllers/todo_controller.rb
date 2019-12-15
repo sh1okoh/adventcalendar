@@ -1,12 +1,14 @@
 class TodoController < ApplicationController
-
+  $todo_list = []
   def create
-    pr
-    create_params
+    print "aaaaaa";
+    p create_params
+    $todo_list.push(create_params)
+    render json: $todo_list
   end
 
   def index
-    index_params
+    render json: $todo_list
   end
 
   def update
@@ -20,7 +22,7 @@ class TodoController < ApplicationController
   private
 
   def create_params
-    params.require(:todo).permit(%i[id name])
+    params.require(:todo).permit(%i[id text])
   end
 
   def index_params
