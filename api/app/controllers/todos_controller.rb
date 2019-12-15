@@ -9,6 +9,7 @@ class TodosController < ApplicationController
 
   # GET /todos/1
   def show
+    render json: @todo
   end
 
   # GET /todos/new
@@ -22,7 +23,7 @@ class TodosController < ApplicationController
 
   # POST /todos
   def create
-    @todo = Todo.new(todo_params)
+    @todo = Todo.new(create_params)
     if @todo.save
       render json: @todo
     else
@@ -32,7 +33,7 @@ class TodosController < ApplicationController
 
   # PATCH/PUT /todos/1
   def update
-    if @todo.update!(todo_params)
+    if @todo.update!(update_params)
       render json: @todo
     else
       render :edit
@@ -42,7 +43,7 @@ class TodosController < ApplicationController
   # DELETE /todos/1
   def destroy
     @todo.destroy
-    redirect_to todos_url, notice: 'Todo was successfully destroyed.'
+    render json: @todos
   end
 
   private
@@ -52,7 +53,15 @@ class TodosController < ApplicationController
     end
 
     # Only allow a trusted parameter "white list" through.
-    def todo_params
+    def create_params
       params.require(:todo).permit(:contents)
+    end
+
+    def update_params
+      params.require(:todo).permit(%i[id contents])
+    end
+
+    def destroy_params
+      params.require(:todo).permit(:id)
     end
 end

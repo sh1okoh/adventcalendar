@@ -29,18 +29,19 @@ const TodoForm = ({addTodo}) => {
   );
 };
 
-const Todo = ({todo, remove}) => {
+const Todo = ({todo, remove, update}) => {
   return (
     <li><a href="#" className="list-group-item">{todo.contents}</a>
     <span onClick={() => {remove(todo.id)}}>×</span>
+    <span onClick={() => {update(todo.id)}}>update</span>
     </li>
   );
 }
 
-const TodoList = ({todos, remove}) => {
+const TodoList = ({todos, remove, update}) => {
   console.log("todolist", todos);
   const todoNode = todos.map((todo) => {
-    return (<Todo todo={todo} key={todo.id} remove={remove}/>)
+    return (<Todo todo={todo} key={todo.id} remove={remove} update={update}/>)
   });
   return (<div className="list-group" style={{marginTop:'30px'}}>{todoNode}</div>);
 }
@@ -79,13 +80,18 @@ class TodoApp extends React.Component{
       if(todo.id !== id) return todo;
     });
 
-    axios.delete(this.apiUrl+'/'+id)
+    axios.delete(this.apiUrl+id)
       .then((res) => {
+        console.log("@@@@@", res)
         this.setState({data: remainder});
       })
   }
+
   handleUpdate(id) {
-    const reminder = ""
+    axios.put(this.apiUrl+id)
+      .then((res) => {
+        this.setState({data: res.data})
+      })
   }
 
   // handleUpdate(id) {
@@ -107,7 +113,7 @@ class TodoApp extends React.Component{
         <TodoList
           todos={this.state.data}
           remove={this.handleRemove.bind(this)}
-          // update={this.handleUpdate.bind(this)}
+          update={this.handleUpdate.bind(this)}
         />
       </div>
     );
