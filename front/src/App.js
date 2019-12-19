@@ -31,17 +31,18 @@ const TodoForm = ({addTodo}) => {
 
 const Todo = ({todo, remove, update}) => {
   return (
-    <li><a href="#" className="list-group-item">{todo.contents}</a>
-    <span onClick={() => {remove(todo.id)}}>×</span>
-    <span onClick={() => {update(todo.id)}}>update</span>
+    <li>
+      <a href="#" className="list-group-item">{todo.contents}</a>
+      <button onClick={() => {remove(todo.id)}}>削除</button>
+      
+      <button onClick={() => {update(todo.id)}}>編集する</button>
     </li>
   );
 }
 
-const TodoList = ({todos, remove, update}) => {
-  console.log("todolist", todos);
+const TodoList = ({todos, remove, update, isChangeForm}) => {
   const todoNode = todos.map((todo) => {
-    return (<Todo todo={todo} key={todo.id} remove={remove} update={update}/>)
+    return (<Todo todo={todo} key={todo.id} remove={remove} update={update} isChangeForm={}/>)
   });
   return (<div className="list-group" style={{marginTop:'30px'}}>{todoNode}</div>);
 }
@@ -53,13 +54,13 @@ class TodoApp extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      data: []
+      data: [],
+      updateBtn: false
     }
     this.apiUrl = 'http://localhost:3000/api/todos/'
   }
 
   componentDidMount(){
-    console.log("componentDidMount");
     axios.get(this.apiUrl)
       .then((res) => {
         this.setState({ data: res.data });
@@ -82,7 +83,6 @@ class TodoApp extends React.Component{
 
     axios.delete(this.apiUrl+id)
       .then((res) => {
-        console.log("@@@@@", res)
         this.setState({data: remainder});
       })
   }
@@ -92,6 +92,10 @@ class TodoApp extends React.Component{
       .then((res) => {
         this.setState({data: res.data})
       })
+  }
+
+  handleOnChangeForm() {
+    this.setState({...this.state, updateBtn: true})
   }
 
   // handleUpdate(id) {
@@ -114,6 +118,7 @@ class TodoApp extends React.Component{
           todos={this.state.data}
           remove={this.handleRemove.bind(this)}
           update={this.handleUpdate.bind(this)}
+          isChangeForm={}
         />
       </div>
     );
